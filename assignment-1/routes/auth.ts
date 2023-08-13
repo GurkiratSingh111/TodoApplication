@@ -9,7 +9,7 @@ const router = express.Router();
 import { z } from "zod";
 
 const signupInput = z.object({
-  username: z.string().min(5).max(50),
+  username: z.string().min(5).max(50).email(),
   password: z.string().min(1).max(20),
 });
 
