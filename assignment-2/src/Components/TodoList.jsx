@@ -1,12 +1,11 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { authState } from '../store/authState.js';
-import {useRecoilValue} from "recoil";
+import { useRecoilValue } from "recoil";
 
-const TodoList = () => {
+
+function useTodos() {
     const [todos, setTodos] = useState([]);
-    const [title, setTitle] = useState('');
-    const [description, setDescription] = useState('');
-    const authStateValue = useRecoilValue(authState);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const getTodos = async () => {
@@ -16,9 +15,23 @@ const TodoList = () => {
             // Todo: Create a type for the response that you get back from the server
             const data = await response.json();
             setTodos(data);
+            setLoading(false);
         };
         getTodos();
-    }, [authState.token]);
+    }, []);
+
+    return {
+        loading,
+        todos: todos,
+        setTodos,
+    }
+}
+const TodoList = () => {
+    const [title, setTitle] = useState('');
+    const [description, setDescription] = useState('');
+    const authStateValue = useRecoilValue(authState);
+    const { loading, todos, setTodos } = useTodos();
+
 
     const addTodo = async () => {
         const response = await fetch('http://localhost:3000/todo/todos', {
@@ -41,9 +54,9 @@ const TodoList = () => {
 
     return (
         <div>
-            <div style={{display: "flex"}}>
+            <div style={{ display: "flex" }}>
                 <h2>Welcome {authStateValue.username}</h2>
-                <div style={{marginTop: 25, marginLeft: 20}}>
+                <div style={{ marginTop: 25, marginLeft: 20 }}>
                     <button onClick={() => {
                         localStorage.removeItem("token");
                         window.location = "/login";

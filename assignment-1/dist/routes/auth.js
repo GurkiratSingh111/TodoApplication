@@ -12,13 +12,42 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+//forever, pm2 => even if your backend goes because of erroneous input, these libraries bring the server up
+//pm2 start dist/index.js => to start the server
+//pm2 to kill the server
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const express_1 = __importDefault(require("express"));
 const middleware_1 = require("../middleware/");
 const db_1 = require("../db");
 const router = express_1.default.Router();
+const zod_1 = require("zod");
+const signupInput = zod_1.z.object({
+    username: zod_1.z.string().min(5).max(10),
+    password: zod_1.z.string().min(1).max(20),
+});
 router.post("/signup", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { username, password } = req.body;
+    const parsedInput = signupInput.safeParse(req.body);
+    if (!parsedInput.success) {
+        res.status(411).json({
+            error: parsedInput.error,
+        });
+        return;
+    }
+    const username = parsedInput.data.username;
+    const password = parsedInput.data.password;
+    // const { username, password } = req.body;
+    // if (typeof username !== "string") {
+    //   res.status(411).json({
+    //     msg: "You sent wrong input, username should be string",
+    //   });
+    //   return;
+    // }
+    // if (typeof password !== "string") {
+    //   res.status(411).json({
+    //     msg: "You sent wrong input, password should be string",
+    //   });
+    //   return;
+    // }
     const user = yield db_1.User.findOne({ username });
     if (user) {
         res.status(403).json({ message: "User already exists" });
