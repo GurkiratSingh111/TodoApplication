@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { authState } from "../store/authState.ts";
+import { authState } from "../store/authState.js";
 import { useRecoilValue } from "recoil";
 import { useNavigate } from "react-router-dom";
 
@@ -85,7 +85,7 @@ const TodoList = () => {
         placeholder="Description"
       />
       <button onClick={addTodo}>Add Todo</button>
-      <ShowMeTodos todos={todos} />
+      {/*<ShowMeTodos todos={todos} />*/}
       {todos.map((todo) => (
         <div key={todo._id}>
           <h3>{todo.title}</h3>
@@ -99,8 +99,8 @@ const TodoList = () => {
   );
 };
 
-function ShowMeTodos(props: { todos: TodoArray }) {
-  return <div>{props.todos[0].title}</div>;
-}
+// function ShowMeTodos(props: { todos: TodoArray }) {
+//   return <div>{props.todos[0].title}</div>;
+// }
 
 export default TodoList;
