@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "target": "es2016",
+    "module": "commonjs",
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "skipLibCheck": true,
+    "outDir": "dist" // outDir => outDirectory which means when all the typescript
+    //files are converted to js where should they be put
+    //"noImplicitAny": false =>to make the code less strict
+    //allow to not mention the types
+  }
+}
